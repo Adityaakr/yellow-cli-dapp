@@ -47,6 +47,9 @@ SCOPE=app.cli.dapp
 ### Basic Commands
 
 ```bash
+# Interactive mode (recommended)
+npm run cli interactive
+
 # Show help
 npm run cli --help
 
