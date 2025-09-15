@@ -42,6 +42,29 @@ export class WalletManager {
   async loadOrCreateWallet(): Promise<CryptoKeypair> {
     await this.ensureWalletDir();
 
+    // Check for environment variable first
+    const envPrivateKey = process.env.PRIVATE_KEY;
+    const shouldImportAndSave = process.env.IMPORT_AND_SAVE === 'true';
+    
+    if (envPrivateKey) {
+      try {
+        if (shouldImportAndSave) {
+          console.log(chalk.blue('🔑 Importing and saving private key...'));
+          return await this.importWallet(envPrivateKey);
+        } else {
+          console.log(chalk.blue('🔑 Using private key from environment...'));
+          // Create temporary keypair without saving
+          const wallet = new ethers.Wallet(envPrivateKey);
+          return {
+            privateKey: envPrivateKey,
+            address: ethers.getAddress(wallet.address),
+          };
+        }
+      } catch (error) {
+        console.log(chalk.red(`❌ Invalid private key in environment: ${error}`));
+      }
+    }
+
     try {
       const walletData = await fs.readFile(this.walletFile, 'utf-8');
       const keypair = JSON.parse(walletData) as CryptoKeypair;

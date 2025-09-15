@@ -186,6 +186,7 @@ export class InteractiveMenu {
         name: 'action',
         message: 'Select channel operation:',
         choices: [
+          { name: '🆕 Create new channel', value: 'create' },
           { name: '📋 List channels', value: 'list' },
           { name: '💰 View balances', value: 'balances' },
           { name: '📡 Connection status', value: 'status' },
@@ -201,6 +202,9 @@ export class InteractiveMenu {
 
     try {
       switch (action) {
+        case 'create':
+          await this.channelCommands.createChannel();
+          break;
         case 'list':
           await this.channelCommands.listChannels();
           break;

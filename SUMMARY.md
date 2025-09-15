@@ -2,7 +2,7 @@
 
 ## Overview
 
-A command-line interface (CLI) application built on Yellow Network's Nitrolite SDK that enables gasless, multi-wallet auction bidding using ERC-7824 state channels. This system allows multiple users to participate in digital art auctions without paying gas fees, with only the winning bid settling on-chain.
+A production-ready command-line interface (CLI) application built on Yellow Network's Nitrolite SDK that enables gasless, multi-wallet auction bidding using ERC-7824 state channels. This comprehensive system allows multiple users to participate in digital art auctions simultaneously without paying gas fees, with only the winning bid settling on-chain. The CLI serves as an excellent entry point for developers to learn Yellow Network integration patterns.
 
 ## Key Features
 
@@ -10,36 +10,54 @@ A command-line interface (CLI) application built on Yellow Network's Nitrolite S
 - Off-chain bidding via Yellow Network's state channels
 - Zero gas fees for auction participation
 - Only winning bids settle on-chain
+- Instant transaction processing without blockchain delays
 
 ### 👥 **Multi-Wallet Support**
 - Independent wallet authentication per terminal session
 - Shared auction marketplace across all participants
 - Process-based wallet isolation for concurrent usage
+- Session-specific wallet and authentication management
 
 ### 🏛️ **Digital Art Auctions**
-- Create auctions for digital art, NFTs, and collectibles
-- Real-time bidding with live updates
+- Create auctions for digital art, NFTs, collectibles, and other items
+- Real-time bidding with live updates via WebSocket
 - Automatic auction settlement and winner determination
+- Comprehensive bid tracking and history
+- Custom auction durations (30min to custom hours)
 
 ### 🔐 **Secure Authentication**
-- EIP-712 structured data signing
+- EIP-712 structured data signing with dual-key architecture
 - Session-based authentication with ClearNode
 - Separate session keys for enhanced security
+- UUID-based challenge-response authentication
+- JWT token management with expiration
+
+### 🎯 **Interactive CLI Experience**
+- Menu-driven interface with comprehensive navigation
+- Real-time auction watching with live updates
+- Detailed bid history and auction analytics
+- Channel operations and balance management
+- Comprehensive wallet management (create, import, export, delete)
 
 ## Architecture Components
 
 ### Core Technologies
 - **@erc7824/nitrolite SDK (v0.2.6)**: Yellow Network's state channel implementation
 - **ethers.js (v6.14.3)**: Ethereum wallet operations and blockchain interaction
-- **WebSocket**: Real-time communication with ClearNode
-- **commander.js**: CLI framework and command parsing
-- **TypeScript**: Type-safe development
+- **ws (v8.18.2)**: WebSocket client for real-time ClearNode communication
+- **commander.js (v11.1.0)**: CLI framework and command parsing
+- **inquirer (v9.2.12)**: Interactive command-line prompts and menus
+- **chalk (v5.4.1)**: Terminal styling and colors
+- **ora (v7.0.1)**: Terminal spinners and loading indicators
+- **TypeScript (v5.3.3)**: Type-safe development with full type coverage
 
 ### Yellow Network Integration
-- **ClearNode**: Message relay and state synchronization
+- **ClearNode**: Message relay and state synchronization at wss://clearnet.yellow.com/ws
 - **State Channels**: ERC-7824 compliant off-chain transaction processing
-- **Multi-Chain Support**: Polygon, Base, and Celo networks
-- **USDC Integration**: Native USDC token support for auctions
+- **Multi-Chain Support**: Polygon (primary), Base, and Celo networks
+- **USDC Integration**: Native USDC token support with real channel detection
+- **Real Channel Usage**: Finds and uses actual USDC channels with balances
+- **Authentication Scope**: app.cli.dapp scope for ClearNode access
 
 ## System Architecture
 
@@ -120,23 +138,29 @@ A command-line interface (CLI) application built on Yellow Network's Nitrolite S
 ## Supported Operations
 
 ### Wallet Management
-- Create new wallets
+- Create new wallets with secure key generation
 - Import existing wallets from private keys
-- Export private keys (with security warnings)
-- View wallet information and balances
+- Export private keys (with comprehensive security warnings)
+- View wallet information and addresses
+- Delete wallets with double confirmation
+- Session-based wallet isolation per terminal
 
 ### Auction Operations
-- Create digital art auctions
-- List active auctions
-- Place bids on auctions
-- View bid history
-- Watch auctions in real-time
-- Settle completed auctions
+- Create digital art auctions with categories (digital_art, nft, collectible, other)
+- List active auctions with real-time data
+- Place bids on auctions with validation
+- View comprehensive bid history across all auctions
+- View bids for specific auctions
+- Watch auctions in real-time with live updates
+- Settle completed auctions (seller only)
+- Custom auction durations (30min, 2h, 1day, 3days, custom)
 
 ### Channel Operations
-- List available state channels
-- View channel balances
-- Monitor connection status
+- Create new channels (guided web process)
+- List available state channels with balances
+- View channel balances and status
+- Monitor ClearNode connection status
+- Automatic USDC channel detection and usage
 
 ## Technical Specifications
 
@@ -161,35 +185,52 @@ A command-line interface (CLI) application built on Yellow Network's Nitrolite S
 ## Development Status
 
 ### ✅ Completed Features
-- Multi-wallet authentication system
-- Gasless auction bidding
-- Real-time auction updates
-- Session-based wallet isolation
+- Multi-wallet authentication system with dual-key architecture
+- Gasless auction bidding with real USDC channels
+- Real-time auction updates via WebSocket
+- Session-based wallet isolation per terminal
 - EIP-712 authentication with ClearNode
 - Shared auction state management
+- Interactive CLI with comprehensive menus
+- Complete auction lifecycle (create, bid, watch, settle)
+- Comprehensive bid tracking and analytics
+- Channel operations and balance management
+- Wallet management (create, import, export, delete)
+- Custom auction durations and categories
+- Real-time auction watching with live updates
 
-### 🔄 Current Issues
-- Auction creation permissions (user-specific)
-- ClearNode timeout handling improvements
+### ✅ Production Ready
+- Stable authentication with ClearNode
+- Real USDC channel integration
+- Multi-terminal concurrent usage
+- Comprehensive error handling
+- Type-safe TypeScript implementation
+- Full CLI command coverage
 
 ### 🚀 Future Enhancements
 - Web interface integration
 - Mobile app support
 - Advanced auction types (Dutch, reserve price)
 - Multi-token support beyond USDC
+- Auction analytics and reporting
+- Notification system for bid updates
 
 ## Use Cases
 
 ### Primary Use Cases
 1. **Digital Artists**: Create and sell digital artwork without gas fees
 2. **Collectors**: Bid on digital art and NFTs with instant transactions
-3. **Developers**: Learn Yellow Network SDK integration patterns
-4. **Researchers**: Study state channel auction mechanisms
+3. **Developers**: Learn Yellow Network SDK integration patterns and best practices
+4. **Researchers**: Study state channel auction mechanisms and gasless transactions
+5. **Auction Houses**: Manage multiple concurrent auctions efficiently
+6. **Educational**: Demonstrate Yellow Network capabilities to new developers
 
 ### Business Benefits
 - **Cost Efficiency**: Eliminate gas fees for auction participation
-- **User Experience**: Instant bidding with real-time updates
-- **Scalability**: Support unlimited concurrent auctions
+- **User Experience**: Instant bidding with real-time updates and live watching
+- **Scalability**: Support unlimited concurrent auctions and bidders
 - **Accessibility**: Lower barrier to entry for digital art markets
+- **Developer Onboarding**: Excellent entry point for Yellow ecosystem
+- **Production Ready**: Stable, tested implementation suitable for real use
 
-This CLI application demonstrates the practical implementation of Yellow Network's vision for gasless, scalable blockchain applications using state channels and off-chain computation.
+This CLI application demonstrates the practical implementation of Yellow Network's vision for gasless, scalable blockchain applications using state channels and off-chain computation. It serves as both a functional auction platform and an excellent educational tool for developers entering the Yellow ecosystem, showcasing production-ready patterns for building dApps with state channels.

@@ -8,7 +8,7 @@ export const CONFIG = {
   NETWORK: process.env.NETWORK || 'polygon',
   RPC_URL: process.env.RPC_URL || 'https://polygon-rpc.com',
   APP_NAME: process.env.APP_NAME || 'Yellow CLI Dapp',
-  SCOPE: process.env.SCOPE || 'app.cli.dapp',
+  SCOPE: process.env.SCOPE || 'app.create',
 };
 
 export const AUTH_TYPES = {

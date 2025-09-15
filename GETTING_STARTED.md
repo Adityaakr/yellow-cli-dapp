@@ -1,6 +1,6 @@
 # Getting Started with Yellow CLI Dapp
 
-This guide will walk you through setting up and using the Yellow CLI Dapp for multi-wallet auction bidding.
+This comprehensive guide will walk you through setting up and using the Yellow CLI Dapp for gasless, multi-wallet auction bidding using Yellow Network's state channels.
 
 ## Prerequisites
 
@@ -36,21 +36,43 @@ cp .env.example .env
 
 Edit `.env` with your settings:
 ```env
-CLEARNODE_URL=wss://your-clearnode-url.com
+CLEARNODE_URL=wss://clearnet.yellow.com/ws
 NETWORK=polygon
 RPC_URL=https://polygon-rpc.com
 APP_NAME=Yellow CLI Dapp
 SCOPE=app.cli.dapp
+# Optional: Use existing private key
+# PRIVATE_KEY=0x1234...
 ```
 
 ### 3. First Run
 
 Test the installation:
 ```bash
+# Using npm script (recommended)
+npm run cli --help
+
+# Or directly
 node bin/yellow-cli.js --help
 ```
 
-You should see the CLI help menu with available commands.
+You should see the CLI help menu with available commands:
+```
+Usage: yellow-cli [options] [command]
+
+Yellow CLI Dapp - Gasless transactions via Nitrolite
+
+Options:
+  -V, --version   display version number
+  -h, --help      display help for command
+
+Commands:
+  wallet          Wallet management operations
+  auction         Digital art auction operations
+  channel         State channel operations
+  interactive     Start interactive mode
+  help [command]  display help for command
+```
 
 ## Step-by-Step Tutorial
 
@@ -97,14 +119,19 @@ npm run cli interactive
 
 **What you'll see:**
 ```
+╔══════════════════════════════════════════╗
+║           🟡 Yellow CLI Dapp             ║
+║     Gasless transactions via Nitrolite   ║
+╚══════════════════════════════════════════╝
+
 ? What would you like to do?
-❯ Wallet Operations
-  Auction Operations
-  Channel Operations
-  Exit
+❯ 💼 Wallet Management
+  🎨 Digital Art Auctions
+  🌐 State Channels
+  ❌ Exit
 ```
 
-Select "Auction Operations" then "List Active Auctions"
+Select "🎨 Digital Art Auctions" then "🏛️ List active auctions"
 
 **What happens:**
 - Connects to ClearNode (Yellow's message relay)
@@ -128,10 +155,11 @@ Select "Auction Operations" then "List Active Auctions"
 ### Step 4: Place Your First Bid
 
 In the interactive menu:
-- Select "Auction Operations"
-- Choose "Place Bid"
+- Select "🎨 Digital Art Auctions"
+- Choose "💰 Place bid"
 - Select the auction you want to bid on
-- Enter your bid amount (e.g., 0.75)
+- Enter your bid amount (must be higher than current bid)
+- Confirm your bid
 
 **What happens:**
 - Authenticates with ClearNode
@@ -156,9 +184,10 @@ Auction: Digital Art Piece
 ### Step 5: Watch Auction in Real-Time
 
 In the interactive menu:
-- Select "Auction Operations"
-- Choose "Watch Auction"
+- Select "🎨 Digital Art Auctions"
+- Choose "👀 Watch auction"
 - Select the auction to monitor
+- Press Ctrl+C to exit watching mode
 
 **What you'll see:**
 - Live updates as other users place bids
@@ -174,14 +203,14 @@ npm run cli interactive
 ```
 
 Follow the menu:
-1. Select "Wallet Operations" → "Create New Wallet"
-2. Select "Auction Operations" → "Create Auction"
+1. Select "💼 Wallet Management" → "🔑 Create new wallet"
+2. Select "🎨 Digital Art Auctions" → "🎨 Create auction"
 3. Enter auction details:
    - **Title**: "My Digital Art"
    - **Description**: "Unique digital artwork"
-   - **Category**: "digital_art"
+   - **Category**: "🎨 Digital Art"
    - **Starting Price**: "0.5"
-   - **Duration**: "2" (hours)
+   - **Duration**: "2 hours"
 
 ### Terminal 2 - Bid on Auction
 
@@ -192,9 +221,9 @@ npm run cli interactive
 ```
 
 Follow the menu:
-1. Select "Wallet Operations" → "Create New Wallet"
-2. Select "Auction Operations" → "List Active Auctions"
-3. Select "Auction Operations" → "Place Bid"
+1. Select "💼 Wallet Management" → "🔑 Create new wallet"
+2. Select "🎨 Digital Art Auctions" → "🏛️ List active auctions"
+3. Select "🎨 Digital Art Auctions" → "💰 Place bid"
 4. Choose the auction and enter bid amount: "0.75"
 
 ### Terminal 3 - Another Bidder
@@ -206,8 +235,8 @@ npm run cli interactive
 ```
 
 Follow the menu:
-1. Select "Wallet Operations" → "Create New Wallet"
-2. Select "Auction Operations" → "Place Bid"
+1. Select "💼 Wallet Management" → "🔑 Create new wallet"
+2. Select "🎨 Digital Art Auctions" → "💰 Place bid"
 3. Outbid Terminal 2 with amount: "1.0"
 
 **All terminals will see the updated auction state!**
@@ -222,11 +251,16 @@ npm run cli interactive
 
 This provides a menu-driven interface:
 ```
+╔══════════════════════════════════════════╗
+║           🟡 Yellow CLI Dapp             ║
+║     Gasless transactions via Nitrolite   ║
+╚══════════════════════════════════════════╝
+
 ? What would you like to do?
-❯ Wallet Operations
-  Auction Operations
-  Channel Operations
-  Exit
+❯ 💼 Wallet Management
+  🎨 Digital Art Auctions
+  🌐 State Channels
+  ❌ Exit
 ```
 
 ## Understanding the Architecture

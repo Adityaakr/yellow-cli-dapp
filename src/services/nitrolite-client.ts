@@ -510,28 +510,110 @@ export class NitroliteClient {
         request.sig = [signature];
         
         const handler = (msg: any) => {
-          // Handle ClearNode response format
-          if (msg.res && Array.isArray(msg.res) && msg.res[0] === requestId && msg.res[1] === 'get_channels') {
+          console.log(chalk.cyan('📥 Channel response:'), JSON.stringify(msg, null, 2));
+          
+          // Handle ClearNode response format - check for both 'get_channels' and 'channels'
+          if (msg.res && Array.isArray(msg.res) && (msg.res[1] === 'get_channels' || msg.res[1] === 'channels')) {
+            console.log(chalk.green('✅ Channels received'));
             this.removeMessageHandler(`get_channels_${requestId}`);
-            resolve(msg.res[2] || []);
+            // Handle both response formats
+            const channelData = msg.res[2];
+            if (channelData && channelData.channels) {
+              resolve(channelData.channels);
+            } else {
+              resolve(channelData || []);
+            }
           }
           // Handle error response
           if (msg.err && Array.isArray(msg.err) && msg.err[0] === requestId) {
+            console.log(chalk.red('❌ Channel error:'), msg.err[2]);
             this.removeMessageHandler(`get_channels_${requestId}`);
             reject(new Error(`Get channels error: ${msg.err[2]}`));
           }
         };
         
         this.addMessageHandler(`get_channels_${requestId}`, handler);
+        console.log(chalk.cyan('📤 Sending get_channels request:'), JSON.stringify(request, null, 2));
         this.send(JSON.stringify(request));
         
-        // Timeout after 15 seconds
+        // Timeout after 30 seconds
         setTimeout(() => {
           this.removeMessageHandler(`get_channels_${requestId}`);
           reject(new Error('Get channels timeout'));
-        }, 15000);
+        }, 30000);
       }).catch(error => {
         reject(new Error(`Failed to sign get_channels request: ${error}`));
+      });
+    });
+  }
+
+
+  /**
+   * Create a new channel using ClearNode format
+   */
+  async createChannel(params: {
+    token: string;
+    amount: string;
+    chainId: number;
+    sessionKey?: string;
+  }): Promise<any> {
+    if (!this.signer) throw new Error('Signer not available');
+    
+    return new Promise((resolve, reject) => {
+      const requestId = this.nextRequestId++;
+      const timestamp = Date.now();
+      
+      // Create request in ClearNode JSON-RPC format matching the spec
+      const channelParams: any = {
+        chain_id: params.chainId,
+        token: params.token,
+        amount: params.amount
+      };
+      
+      if (params.sessionKey) {
+        channelParams.session_key = params.sessionKey;
+      }
+      
+      const request = {
+        req: [requestId, 'create_channel', [channelParams], timestamp],
+        sig: [] as string[]
+      };
+      
+      // Sign the request using ethers wallet directly
+      const reqString = JSON.stringify(request.req);
+      const wallet = new ethers.Wallet(this.keypair!.privateKey);
+      
+      wallet.signMessage(reqString).then(signature => {
+        request.sig = [signature];
+        
+        const handler = (msg: any) => {
+          console.log(chalk.cyan('📥 Create channel response:'), JSON.stringify(msg, null, 2));
+          
+          // Handle ClearNode response format for create_channel
+          if (msg.res && Array.isArray(msg.res) && msg.res[1] === 'create_channel') {
+            console.log(chalk.green('✅ Channel created successfully'));
+            this.removeMessageHandler(`create_channel_${requestId}`);
+            resolve(msg.res[2] || {});
+          }
+          // Handle error response
+          if (msg.err && Array.isArray(msg.err) && msg.err[0] === requestId) {
+            console.log(chalk.red('❌ Channel creation error:'), msg.err[2]);
+            this.removeMessageHandler(`create_channel_${requestId}`);
+            reject(new Error(`Create channel error: ${msg.err[2]}`));
+          }
+        };
+        
+        this.addMessageHandler(`create_channel_${requestId}`, handler);
+        console.log(chalk.cyan('📤 Sending create_channel request:'), JSON.stringify(request, null, 2));
+        this.send(JSON.stringify(request));
+        
+        // Timeout after 30 seconds
+        setTimeout(() => {
+          this.removeMessageHandler(`create_channel_${requestId}`);
+          reject(new Error('Create channel timeout'));
+        }, 30000);
+      }).catch(error => {
+        reject(new Error(`Failed to sign create_channel request: ${error}`));
       });
     });
   }

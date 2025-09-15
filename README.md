@@ -1,16 +1,19 @@
 # 🟡 Yellow CLI Dapp - Multi-Wallet Auction System
 
-A command-line interface application built on Yellow Network's Nitrolite SDK that enables gasless, multi-wallet auction bidding using ERC-7824 state channels. Multiple users can participate in digital art auctions simultaneously without paying gas fees.
+A production-ready command-line interface application built on Yellow Network's Nitrolite SDK that enables gasless, multi-wallet auction bidding using ERC-7824 state channels. Multiple users can participate in digital art auctions simultaneously without paying gas fees, demonstrating the full power of Yellow's state channel technology.
 
 ## 🚀 Key Features
 
-- **🔗 Gasless Transactions**: Off-chain bidding via Yellow Network's state channels
-- **👥 Multi-Wallet Support**: Independent wallet authentication per terminal session
-- **🏛️ Digital Art Auctions**: Create auctions for digital art, NFTs, and collectibles
-- **⚡ Real-time Updates**: Live auction updates via WebSocket connections
-- **🔐 Secure Authentication**: EIP-712 structured data signing with ClearNode
-- **🌐 Multi-chain Support**: Polygon, Base, and Celo networks
-- **💰 USDC Integration**: Native USDC token support for auctions
+- **🔗 Gasless Transactions**: Off-chain bidding via Yellow Network's state channels with zero gas fees
+- **👥 Multi-Wallet Support**: Independent wallet authentication per terminal session with session isolation
+- **🏛️ Digital Art Auctions**: Create auctions for digital art, NFTs, collectibles, and other items
+- **⚡ Real-time Updates**: Live auction updates via WebSocket connections to ClearNode
+- **🔐 Secure Authentication**: EIP-712 structured data signing with dual-key architecture
+- **🌐 Multi-chain Support**: Polygon (primary), Base, and Celo networks
+- **💰 USDC Integration**: Native USDC token support with real channel detection
+- **🎯 Interactive CLI**: Menu-driven interface with comprehensive command support
+- **📊 Bid Tracking**: View all bids across auctions with detailed history
+- **⚖️ Auction Settlement**: Automated settlement for completed auctions
 
 ## Installation
 
@@ -53,43 +56,60 @@ npm run cli interactive
 # Show help
 npm run cli --help
 
+# Interactive mode (recommended)
+npm run cli interactive
+
 # Wallet operations
 npm run cli wallet create
 npm run cli wallet show
 npm run cli wallet import
 npm run cli wallet export
+npm run cli wallet delete
 
 # Auction operations
 npm run cli auction create
 npm run cli auction list
-npm run cli auction bid <auction-id> <amount>
-npm run cli auction watch <auction-id>
+npm run cli auction bid
+npm run cli auction watch
 npm run cli auction settle
+npm run cli auction bids
+npm run cli auction auction-bids
 
-# Interactive mode (recommended)
-npm run cli interactive
+# Channel operations
+npm run cli channel create
+npm run cli channel list
+npm run cli channel balances
+npm run cli channel status
 ```
 
 ### Multi-Wallet Usage
 
-**Terminal 1 (Wallet A):**
+**Terminal 1 (Seller):**
 ```bash
 # Create first wallet and auction
 npm run cli interactive
-# Select: Wallet Operations → Create New Wallet
-# Select: Auction Operations → Create Auction
+# Select: 💼 Wallet Management → 🔑 Create new wallet
+# Select: 🎨 Digital Art Auctions → 🎨 Create auction
 ```
 
-**Terminal 2 (Wallet B):**
+**Terminal 2 (Bidder A):**
 ```bash
 # Create second wallet and bid
 npm run cli interactive
-# Select: Wallet Operations → Create New Wallet
-# Select: Auction Operations → List Auctions
-# Select: Auction Operations → Place Bid
+# Select: 💼 Wallet Management → 🔑 Create new wallet
+# Select: 🎨 Digital Art Auctions → 🏛️ List active auctions
+# Select: 🎨 Digital Art Auctions → 💰 Place bid
 ```
 
-**Both terminals can see shared auction state!**
+**Terminal 3 (Bidder B):**
+```bash
+# Create third wallet and outbid
+npm run cli interactive
+# Select: 💼 Wallet Management → 🔑 Create new wallet
+# Select: 🎨 Digital Art Auctions → 💰 Place bid
+```
+
+**All terminals see shared auction state in real-time!**
 
 ### Example Workflow
 
@@ -151,20 +171,24 @@ The CLI uses EIP-712 structured data signing for secure authentication with Clea
 
 ### Core Components
 
-- **NitroliteClient**: WebSocket client for ClearNode communication with EIP-712 auth
-- **AuthManager**: Session-based authentication with ClearNode
-- **WalletManager**: Secure local wallet management with session isolation
-- **AuctionService**: Auction creation, bidding, and settlement
-- **Multi-Wallet Support**: Independent authentication per terminal session
+- **NitroliteClient**: WebSocket client for ClearNode communication with EIP-712 authentication
+- **AuthManager**: Session-based authentication with ClearNode using dual-key architecture
+- **WalletManager**: Secure local wallet management with session isolation per terminal
+- **AuctionService**: Complete auction lifecycle management (create, bid, settle, watch)
+- **ChannelCommands**: State channel operations and USDC channel detection
+- **InteractiveMenu**: Menu-driven CLI interface with comprehensive navigation
+- **Multi-Wallet Support**: Independent authentication per terminal session with shared state
 
 ### Technology Stack
 
-- **@erc7824/nitrolite**: Core SDK for state channel operations
-- **ethers.js**: Ethereum wallet and EIP-712 signing functionality
-- **commander**: CLI framework and command parsing
-- **inquirer**: Interactive command-line prompts
-- **chalk**: Terminal styling and colors
-- **WebSocket**: Real-time communication with ClearNode
+- **@erc7824/nitrolite (v0.2.6)**: Core SDK for state channel operations
+- **ethers.js (v6.14.3)**: Ethereum wallet operations and EIP-712 signing
+- **commander (v11.1.0)**: CLI framework and command parsing
+- **inquirer (v9.2.12)**: Interactive command-line prompts and menus
+- **chalk (v5.4.1)**: Terminal styling and colors
+- **ws (v8.18.2)**: WebSocket client for real-time ClearNode communication
+- **ora (v7.0.1)**: Terminal spinners and loading indicators
+- **dotenv (v16.5.0)**: Environment configuration management
 
 ## Development
 
@@ -185,13 +209,21 @@ npm start
 - Each terminal session maintains its own wallet: `~/.yellow-cli/wallet-{sessionId}.json`
 - Independent authentication sessions: `~/.yellow-cli/session-{sessionId}.json`
 - Shared auction marketplace: `~/.yellow-cli/auctions.json`
+- Process-based session IDs prevent wallet conflicts
+
+### Dual-Key Architecture
+- **Main Wallet**: Your primary wallet for signing transactions and authentication
+- **Session Key**: Separate keypair generated for participant role isolation
+- **EIP-712 Signing**: Structured data signing with wallet/participant separation
+- **JWT Tokens**: Session-based authentication tokens with expiration
 
 ### Security Best Practices
-- Private keys are encrypted and stored locally
+- Private keys are encrypted and stored locally with secure permissions
 - Always backup your private key before deleting the wallet
 - Never share your private key or commit it to version control
 - Use environment variables for sensitive configuration
 - Each wallet uses separate session keys for ClearNode authentication
+- Authentication challenges use UUID-based challenge-response
 
 ## Troubleshooting
 
