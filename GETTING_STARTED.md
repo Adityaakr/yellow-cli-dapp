@@ -1,13 +1,28 @@
-# Getting Started with Yellow CLI Dapp
+# Getting Started with Yellow CLI Auction Platform
 
-This comprehensive guide will walk you through setting up and using the Yellow CLI Dapp for gasless, multi-wallet auction bidding using Yellow Network's state channels.
+A comprehensive guide to installing, configuring, and running the Yellow Network CLI auction system for gasless digital art auctions.
+
+## ✨ Key Features
+
+- **🚫 Zero Gas Fees**: Bid unlimited times without paying transaction costs
+- **🎯 Auctions**: Bid, Create, Watch & Settle Auctions - all auctions track auction ID
+- **🔗 State Channels**: Check open and close state channels across EVM Chains
+- **📡 Connection Status**: Verify and check anytime
+- **💼 Wallet Management**: Show wallet info, create new wallet, import/export wallet
+- **⚡ Real-time Updates**: Instant bid processing via WebSocket connections
+- **🔐 Production Security**: EIP-712 authentication with dual-key architecture
+- **💰 Real USDC Integration**: Uses actual USDC channels on Polygon network
+- **👥 Multi-user Support**: Multiple terminals can participate simultaneously
 
 ## Prerequisites
 
-- **Node.js** (v18 or higher)
-- **npm** or **yarn**
-- **Terminal/Command Line** access
-- **Basic understanding** of cryptocurrency wallets
+Before you begin, ensure you have the following:
+
+- **Node.js 18+** installed on your system
+- **npm** or **yarn** package manager
+- **Wallet with USDC** on Polygon network (for real auctions)
+- **Private key access** to your wallet
+- **Terminal/Command Line** experience
 
 ## Quick Start
 
@@ -15,8 +30,8 @@ This comprehensive guide will walk you through setting up and using the Yellow C
 
 ```bash
 # Clone the repository
-git clone <repository-url>
-cd cli-dapp
+git clone https://github.com/your-username/yellow-cli-auction
+cd yellow-cli-auction
 
 # Install dependencies
 npm install
@@ -25,54 +40,43 @@ npm install
 npm run build
 ```
 
-### 2. Environment Setup
+### 2. Configuration
 
-Create your environment configuration:
+Create your environment file:
 
 ```bash
 # Copy the example environment file
 cp .env.example .env
 ```
 
-Edit `.env` with your settings:
+Edit `.env` with your private key:
 ```env
+PRIVATE_KEY=0x1234567890abcdef...  # Your actual private key
 CLEARNODE_URL=wss://clearnet.yellow.com/ws
 NETWORK=polygon
-RPC_URL=https://polygon-rpc.com
 APP_NAME=Yellow CLI Dapp
 SCOPE=app.cli.dapp
-# Optional: Use existing private key
-# PRIVATE_KEY=0x1234...
 ```
 
-### 3. First Run
+⚠️ **Security Note**: Never commit your `.env` file with real private keys to version control.
+
+### 3. Authentication Setup
+
+The Yellow SDK uses a dual-key authentication pattern:
+
+- **Main Wallet**: Your actual wallet that holds USDC (signs authentication)
+- **Session Key**: Temporary key generated for each session (used for participant role)
+
+This separation ensures security while enabling gasless transactions through state channels.
+
+### 4. First Run
 
 Test the installation:
 ```bash
-# Using npm script (recommended)
-npm run cli --help
-
-# Or directly
-node bin/yellow-cli.js --help
+npm run cli interactive
 ```
 
-You should see the CLI help menu with available commands:
-```
-Usage: yellow-cli [options] [command]
-
-Yellow CLI Dapp - Gasless transactions via Nitrolite
-
-Options:
-  -V, --version   display version number
-  -h, --help      display help for command
-
-Commands:
-  wallet          Wallet management operations
-  auction         Digital art auction operations
-  channel         State channel operations
-  interactive     Start interactive mode
-  help [command]  display help for command
-```
+You should see the interactive menu with wallet and auction operations.
 
 ## Step-by-Step Tutorial
 
@@ -119,19 +123,14 @@ npm run cli interactive
 
 **What you'll see:**
 ```
-╔══════════════════════════════════════════╗
-║           🟡 Yellow CLI Dapp             ║
-║     Gasless transactions via Nitrolite   ║
-╚══════════════════════════════════════════╝
-
 ? What would you like to do?
-❯ 💼 Wallet Management
-  🎨 Digital Art Auctions
-  🌐 State Channels
-  ❌ Exit
+❯ Wallet Operations
+  Auction Operations
+  Channel Operations
+  Exit
 ```
 
-Select "🎨 Digital Art Auctions" then "🏛️ List active auctions"
+Select "Auction Operations" then "List Active Auctions"
 
 **What happens:**
 - Connects to ClearNode (Yellow's message relay)
@@ -155,11 +154,10 @@ Select "🎨 Digital Art Auctions" then "🏛️ List active auctions"
 ### Step 4: Place Your First Bid
 
 In the interactive menu:
-- Select "🎨 Digital Art Auctions"
-- Choose "💰 Place bid"
+- Select "Auction Operations"
+- Choose "Place Bid"
 - Select the auction you want to bid on
-- Enter your bid amount (must be higher than current bid)
-- Confirm your bid
+- Enter your bid amount (e.g., 0.75)
 
 **What happens:**
 - Authenticates with ClearNode
@@ -184,10 +182,9 @@ Auction: Digital Art Piece
 ### Step 5: Watch Auction in Real-Time
 
 In the interactive menu:
-- Select "🎨 Digital Art Auctions"
-- Choose "👀 Watch auction"
+- Select "Auction Operations"
+- Choose "Watch Auction"
 - Select the auction to monitor
-- Press Ctrl+C to exit watching mode
 
 **What you'll see:**
 - Live updates as other users place bids
@@ -203,14 +200,14 @@ npm run cli interactive
 ```
 
 Follow the menu:
-1. Select "💼 Wallet Management" → "🔑 Create new wallet"
-2. Select "🎨 Digital Art Auctions" → "🎨 Create auction"
+1. Select "Wallet Operations" → "Create New Wallet"
+2. Select "Auction Operations" → "Create Auction"
 3. Enter auction details:
    - **Title**: "My Digital Art"
    - **Description**: "Unique digital artwork"
-   - **Category**: "🎨 Digital Art"
+   - **Category**: "digital_art"
    - **Starting Price**: "0.5"
-   - **Duration**: "2 hours"
+   - **Duration**: "2" (hours)
 
 ### Terminal 2 - Bid on Auction
 
@@ -221,9 +218,9 @@ npm run cli interactive
 ```
 
 Follow the menu:
-1. Select "💼 Wallet Management" → "🔑 Create new wallet"
-2. Select "🎨 Digital Art Auctions" → "🏛️ List active auctions"
-3. Select "🎨 Digital Art Auctions" → "💰 Place bid"
+1. Select "Wallet Operations" → "Create New Wallet"
+2. Select "Auction Operations" → "List Active Auctions"
+3. Select "Auction Operations" → "Place Bid"
 4. Choose the auction and enter bid amount: "0.75"
 
 ### Terminal 3 - Another Bidder
@@ -235,8 +232,8 @@ npm run cli interactive
 ```
 
 Follow the menu:
-1. Select "💼 Wallet Management" → "🔑 Create new wallet"
-2. Select "🎨 Digital Art Auctions" → "💰 Place bid"
+1. Select "Wallet Operations" → "Create New Wallet"
+2. Select "Auction Operations" → "Place Bid"
 3. Outbid Terminal 2 with amount: "1.0"
 
 **All terminals will see the updated auction state!**
@@ -251,17 +248,235 @@ npm run cli interactive
 
 This provides a menu-driven interface:
 ```
-╔══════════════════════════════════════════╗
-║           🟡 Yellow CLI Dapp             ║
-║     Gasless transactions via Nitrolite   ║
-╚══════════════════════════════════════════╝
-
 ? What would you like to do?
-❯ 💼 Wallet Management
-  🎨 Digital Art Auctions
-  🌐 State Channels
-  ❌ Exit
+❯ Wallet Operations
+  Auction Operations
+  Channel Operations
+  Exit
 ```
+
+## 🏗️ Core Technical Architecture
+
+Understanding how the Yellow CLI works under the hood will help you build better applications and troubleshoot issues effectively.
+
+### 🔐 Dual-Key Authentication System
+
+The Yellow CLI uses a sophisticated dual-key authentication system that separates wallet identity from session participation:
+
+- **Main Wallet**: Your identity and fund ownership (signs authentication challenges)
+- **Session Key**: Temporary key for state channel participation (used in transactions)
+- **EIP-712 Signing**: Structured message signing for security and user consent
+
+```typescript
+// EIP-712 Domain and Type Definitions
+const domain = {
+  name: 'Yellow CLI Dapp',
+  version: '1'
+};
+
+const types = {
+  Policy: [
+    { name: 'challenge', type: 'string' },
+    { name: 'scope', type: 'string' },
+    { name: 'wallet', type: 'address' },
+    { name: 'application', type: 'address' },
+    { name: 'participant', type: 'address' },
+    { name: 'expire', type: 'uint256' },
+    { name: 'allowances', type: 'Allowance[]' }
+  ],
+  Allowance: [
+    { name: 'asset', type: 'address' },
+    { name: 'amount', type: 'uint256' }
+  ]
+};
+
+// Message Structure for Authentication
+const message = {
+  challenge: uuid,              // From ClearNode
+  scope: 'app.cli.dapp',       // Application scope
+  wallet: walletAddress,        // Main wallet (your identity)
+  application: walletAddress,   // App identifier
+  participant: sessionAddress,  // Session key (temporary)
+  expire: timestamp,           // Token expiration
+  allowances: []              // Token permissions
+};
+
+// EIP-712 Signature Generation
+const signature = await wallet._signTypedData(domain, types, message);
+```
+
+### 🔄 Complete Authentication Flow
+
+The authentication process follows this sequence:
+
+```typescript
+// 1. WebSocket Connection to ClearNode
+const ws = new WebSocket('wss://clearnet.yellow.com/ws');
+
+// 2. Send Authentication Request
+const authRequest = {
+  jsonrpc: '2.0',
+  method: 'auth_request',
+  params: [{
+    scope: 'app.cli.dapp',
+    wallet: walletAddress
+  }],
+  id: 1
+};
+
+// 3. Receive Challenge from ClearNode
+const challengeResponse = {
+  jsonrpc: '2.0',
+  result: {
+    challenge: '97ee2ce8-9f1d-4368-9801-ba4497cc0659'  // UUID
+  },
+  id: 1
+};
+
+// 4. Sign EIP-712 Message with Challenge
+const signature = await wallet._signTypedData(domain, types, {
+  challenge: challengeResponse.result.challenge,
+  scope: 'app.cli.dapp',
+  wallet: walletAddress,
+  application: walletAddress,
+  participant: sessionAddress,
+  expire: Math.floor(Date.now() / 1000) + 86400, // 24 hours
+  allowances: []
+});
+
+// 5. Send Verification with Signature
+const verifyRequest = {
+  jsonrpc: '2.0',
+  method: 'auth_verify',
+  params: [{
+    challenge: challengeResponse.result.challenge,
+    signature: signature
+  }],
+  id: 2
+};
+
+// 6. Receive JWT Token Response
+const tokenResponse = {
+  jsonrpc: '2.0',
+  result: {
+    token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
+    expires: 1757977330
+  },
+  id: 2
+};
+```
+
+### 🔑 Session Management
+
+Each terminal maintains isolated authentication:
+
+```typescript
+// Terminal Session Isolation
+export class WalletManager {
+  constructor() {
+    const homeDir = os.homedir();
+    this.yellowDir = path.join(homeDir, '.yellow-cli');
+    
+    // Use terminal session ID for wallet isolation
+    const sessionId = process.env.TERM_SESSION_ID || process.ppid || 'default';
+    this.walletFile = path.join(this.yellowDir, `wallet-${sessionId}.json`);
+    this.sessionFile = path.join(this.yellowDir, `session-${sessionId}.json`);
+  }
+  
+  async saveSession(token: string, expires: number) {
+    const sessionData = {
+      token,
+      expires,
+      walletAddress: this.wallet.address,
+      sessionAddress: this.sessionKey.address,
+      timestamp: Date.now()
+    };
+    
+    await fs.writeFile(this.sessionFile, JSON.stringify(sessionData, null, 2));
+  }
+}
+```
+
+**Why This Matters:**
+- Your main wallet stays secure and only signs authentication
+- Session keys handle all state channel operations
+- Each terminal session gets its own isolated authentication
+- Compromised session keys don't affect your main wallet
+- JWT tokens expire automatically for security
+
+### 🔗 State Channel Operations
+
+State channels enable gasless transactions by moving operations off-chain:
+
+```typescript
+// Finding Real USDC Channels
+async findUSDCChannel(): Promise<string> {
+  try {
+    const channels = await this.client.getChannels();
+    
+    // Look for USDC channel on Polygon with balance
+    const usdcChannel = channels.find((channel: any) => {
+      return channel.status === 'open' && 
+             channel.balance && 
+             BigInt(channel.balance) > 0;
+    });
+
+    if (usdcChannel) return usdcChannel.id;
+  } catch (error) {
+    console.log('❌ Could not fetch channels');
+  }
+
+  return { error: 'No USDC channels found. Please create a channel first.' };
+}
+```
+
+**State Channel Benefits:**
+- **Zero Gas Fees**: All bidding happens off-chain
+- **Instant Updates**: Real-time state synchronization
+- **Multi-User Support**: Multiple participants in same channel
+- **Secure Settlement**: Final state settles on-chain
+
+### 🎯 Auction Management Pattern
+
+The auction system demonstrates local-first architecture with optional cloud sync:
+
+```typescript
+// Local-First Auction Creation
+async createAuction(params: CreateAuctionParams): Promise<string> {
+  const walletInfo = await this.walletManager.getWalletInfo();
+  if (!walletInfo) {
+    throw new Error('No wallet found. Create a wallet first.');
+  }
+
+  try {
+    const channelId = await this.findUSDCChannel();
+    const auction = this.buildAuctionObject(params, walletInfo, channelId);
+    
+    // Try ClearNode sync (optional)
+    try {
+      await this.client.createSignedRequest('submit_app_state', [auction]);
+      console.log('✅ Synced with ClearNode');
+    } catch (syncError) {
+      console.log('Warning: Local-only mode');
+    }
+    
+    this.saveAuction(auction);
+    return auction.id;
+    
+  } catch (error) {
+    if (error.message.includes('channel')) {
+      throw new Error('No USDC channels available. Create a channel first.');
+    }
+    throw new Error(`Failed to create auction: ${error.message}`);
+  }
+}
+```
+
+**Architecture Benefits:**
+- **Offline Capability**: Works without internet connection
+- **Graceful Degradation**: ClearNode failures don't break functionality
+- **Real-time Sync**: When online, all terminals see updates instantly
+- **Error Recovery**: Clear error messages guide users to solutions
 
 ## Understanding the Architecture
 
