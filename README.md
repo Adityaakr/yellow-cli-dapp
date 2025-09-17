@@ -18,6 +18,7 @@ A production-ready command-line interface application built on Yellow Network's 
 ## Installation
 
 ```bash
+git clone https://github.com/Adityaakr/yellow-cli-dapp.git
 # Install dependencies
 npm install
 
