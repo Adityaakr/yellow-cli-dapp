@@ -29,6 +29,7 @@ This CLI application showcases the Yellow SDK's power by solving a real-world pr
 ## Installation
 
 ```bash
+git clone https://github.com/Adityaakr/yellow-cli-dapp.git
 # Install dependencies
 npm install
 
